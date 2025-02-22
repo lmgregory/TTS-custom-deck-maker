@@ -17,17 +17,19 @@
 # Import packages
 from PIL import Image, ImageFilter
 import glob
-import numpy as np
 import math
 
 # Import all images from a specified folder. Default is a relative pathname to folder "to_concat"
 images = []
-for filename in glob.iglob("to_concat/*"):
+for filename in glob.iglob("to_concat/*"):  ### Make this directory whatever directory you store your card images in
     # Open a new image
     im = Image.open(filename)
     # Add the image as many times as instances of the card occur in the deck
     # MAKE SURE the last character in the filename (not including .png or .jpg) is the integer count of the card
-    count = int(filename[-5])
+    for x in range(len(filename[0:-5])):
+        if not filename[-5-x].isnumeric():
+            count = int(filename[-4-x:-4])
+            break
     for i in range(count):
         # Add the image to a list
         images.append(im)
@@ -57,7 +59,7 @@ card_h = images[0].height
 # Create base image for complete card deck
 des = Image.new(mode = 'RGB', size = (card_w*num_col, card_h*num_row))
 # Calculate actual number of rows
-row_actual = math.ceil(num_cards/num_col);
+row_actual = math.ceil(num_cards/num_col)
 
 
 # Deck Sythesizer
@@ -79,4 +81,4 @@ for i in range(row_actual):
     im = row_images[i]
     des.paste(im, (0, i*card_h))
 
-des.save('newdeck.jpg')
+des.save('newdeck.jpg') ### Change to whatever name you want the final card sheet to be
